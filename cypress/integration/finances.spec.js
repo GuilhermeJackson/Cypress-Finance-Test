@@ -1,10 +1,13 @@
 /// <reference types="cypress"/>
-import { format } from '../support/utils'
+import { format, prepareLocalStorage } from '../support/utils'
 
 context('Dev Dinances Agilizei', () => {
     beforeEach(() => {
-        cy.visit('https://devfinance-agilizei.netlify.app/#');
-        cy.get('#data-table tbody tr').should('have.length', 0);
+        cy.visit('https://devfinance-agilizei.netlify.app/#', {
+            onBeforeLoad: (win) => {
+                prepareLocalStorage(win)
+            }
+        });
     });
     it('Cadastrar entradas', () => {
         //mapeando elemento
@@ -13,7 +16,7 @@ context('Dev Dinances Agilizei', () => {
         cy.get('[name=amount').type(20.30); //atributos
         cy.get('[type=date').type('2021-03-22'); //atributos
         cy.get('button').contains('Salvar').click(); // tipo e valor
-        cy.get('#data-table tbody tr').should('have.length', 1);
+        cy.get('#data-table tbody tr').should('have.length', 3);
     });
     it('Cadastrar saidas', () => {
         //mapeando elemento
@@ -22,58 +25,25 @@ context('Dev Dinances Agilizei', () => {
         cy.get('[name=amount').type(-15); //atributos
         cy.get('[type=date').type('2021-03-22'); //atributos
         cy.get('button').contains('Salvar').click(); // tipo e valor
-        cy.get('#data-table tbody tr').should('have.length', 1);
+        cy.get('#data-table tbody tr').should('have.length', 3);
     });
 
     it('Remover entradas e saidas', () => {
-        const entrada = 'Skol'
-        const saida = 'Patagonia'
-
-        cy.get('#transaction .button').click(); // id + classe
-        cy.get('#description').type(entrada); // id
-        cy.get('[name=amount').type(100); //atributos
-        cy.get('[type=date').type('2021-03-22'); //atributos
-        cy.get('button').contains('Salvar').click(); // tipo e valor
-        cy.get('#data-table tbody tr').should('have.length', 1);
-
-        cy.get('#transaction .button').click(); // id + classe
-        cy.get('#description').type(saida); // id
-        cy.get('[name=amount').type(-50); //atributos
-        cy.get('[type=date').type('2021-03-22'); //atributos
-        cy.get('button').contains('Salvar').click(); // tipo e valor
-        cy.get('#data-table tbody tr').should('have.length', 2);
-
         // voltar para o elemento pai e avançar para um td img attr
         cy.get('td.description')
-            .contains(entrada)
+            .contains("Serrana")
             .parent() // busca no elemento pai
             .find('img[onclick*=remove]')
             .click();
 
         // buscar todos irmaos e buscar o que tem img + attr
         cy.get('td.description')
-            .contains(saida)
+            .contains("Guaraná")
             .siblings() // busca no elemento irmãos
             .children('img[onclick*=remove]')
             .click();
     });
     it('Validar saldo com diversas transações', () => {
-        const entrada = 'Skol'
-        const saida = 'Patagonia'
-
-        cy.get('#transaction .button').click(); // id + classe
-        cy.get('#description').type(entrada); // id
-        cy.get('[name=amount').type(100); //atributos
-        cy.get('[type=date').type('2021-03-22'); //atributos
-        cy.get('button').contains('Salvar').click(); // tipo e valor
-        cy.get('#data-table tbody tr').should('have.length', 1);
-
-        cy.get('#transaction .button').click(); // id + classe
-        cy.get('#description').type(saida); // id
-        cy.get('[name=amount').type(-50); //atributos
-        cy.get('[type=date').type('2021-03-22'); //atributos
-        cy.get('button').contains('Salvar').click(); // tipo e valor
-
         let incomes = 0
         let expenses = 0
         
