@@ -30,7 +30,7 @@ jobs:
     
     # action criada
     - name: Cypress run
-      uses: cypress-io/github-action@av2.8.2
+      uses: cypress-io/github-action@v2.8.2
       with:
         record: true
         group: 'Semana Agilizei'
