@@ -27,8 +27,7 @@ jobs:
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v4
-        with:
-          record: true
+        
     #steps:
     #- uses: actions/checkout@v2
     #- name: Use Node.js ${{ matrix.node-version }}
